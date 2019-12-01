@@ -14,7 +14,7 @@ fun readFileLines(fname: String): List<String> {
 fun basicFuelCalc(x: Int): Int = x.div(3) - 2
 
 fun calcFuel(m: Int): Int {
-    fun totalFuel(x: Int, acc: Int): Int {
+    tailrec fun totalFuel(x: Int, acc: Int): Int {
         val fuel = basicFuelCalc(x)
         if (fuel <= 0) return acc
         return totalFuel(fuel, fuel + acc)
