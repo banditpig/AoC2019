@@ -1,15 +1,6 @@
 package aoc2019
 
-import java.io.File
-
-fun readFileLinesAsInt(fname: String): List<Int> =
-    readFileLines(fname).map { it.toInt() }
-
-fun readFileLines(fname: String): List<String> {
-    val input = mutableListOf<String>()
-    File(fname).useLines { all -> input.addAll(all) }
-    return input
-}
+import util.*
 
 fun basicFuelCalc(x: Int): Int = x.div(3) - 2
 
