@@ -1,18 +1,18 @@
 package aoc2019
 import util.*
 
+const val target = 19690720
+
+
 fun pairs(range:Int):List<Pair<Int,Int>> {
-    val list = mutableListOf<Pair<Int, Int>>()
-      (0..range).forEach { x ->
-          (0..range).map { Pair(x, it) }.toCollection(list)
-      }
-    return list
+    return(0..range).asSequence().cartesian((0..range).asSequence()).toList()
+
 }
 fun checkPair(pair: Pair<Int, Int>, prog:MutableList<Int>):Boolean {
     val (n, v) = pair
     prog[1] = n
     prog[2] = v
-    return runProg(prog)[0] == 19690720
+    return runProg(prog)[0] == target
 }
 
 fun checkAllPairs(pairs : List<Pair<Int, Int>> , ints:List<Int> ):Int{
@@ -29,7 +29,7 @@ fun runProg(prog:MutableList<Int>):List<Int>{
     tailrec fun evalProg(prog:MutableList<Int>, ix:Int):List<Int>{
         val op = prog[ix]
         if ( op == 99) return prog
-        var result: Int = 0
+        var result = 0
         when {
             op == 1 -> result = prog[prog[ix + 1]] + prog[prog[ix + 2]]
             op == 2 -> result = prog[prog[ix + 1]] * prog[prog[ix + 2]]
