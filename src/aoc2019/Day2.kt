@@ -5,7 +5,7 @@ const val target = 19690720
 
 
 fun pairs(range:Int):List<Pair<Int,Int>> {
-    return(0..range).asSequence().cartesian((0..range).asSequence()).toList()
+    return (0..range).asSequence().cartesian((0..range).asSequence()).toList()
 
 }
 fun checkPair(pair: Pair<Int, Int>, prog:MutableList<Int>):Boolean {
@@ -30,9 +30,9 @@ fun runProg(prog:MutableList<Int>):List<Int>{
         val op = prog[ix]
         if ( op == 99) return prog
         var result = 0
-        when {
-            op == 1 -> result = prog[prog[ix + 1]] + prog[prog[ix + 2]]
-            op == 2 -> result = prog[prog[ix + 1]] * prog[prog[ix + 2]]
+        when (op) {
+            1 -> result = prog[prog[ix + 1]] + prog[prog[ix + 2]]
+            2 -> result = prog[prog[ix + 1]] * prog[prog[ix + 2]]
         }
 
         prog[prog[ix + 3]] = result
