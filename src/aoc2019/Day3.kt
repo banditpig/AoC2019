@@ -9,22 +9,21 @@ fun applyInstruction(instr:Pair<Char, Int>, point:Point ):List<Point> {
     val (op, d) = instr
     val (x, y) = point
 
-    var points = mutableListOf<Point>()
-    if(op == 'U') {
-        (1..d).map{points.add(Point(x, y - it))}
-        return points
-    }
-    if(op == 'D') {
-        (1..d).map{points.add(Point(x, y + it))}
-        return points
-    }
-    if(op == 'L'){
-        (1..d).map{points.add(Point(x - it, y))}
-        return points
+    fun accum( ac:MutableList<Point>, p:Point):MutableList<Point>{
+        ac.add(p)
+        return ac
     }
 
-    (1..d).map {points.add(Point(x + it, y)) }
-    return points
+    if(op == 'U') {
+        return (1..d).fold(mutableListOf<Point>()){acc, n -> accum(acc,Point(x, y - n))}
+    }
+    if(op == 'D') {
+        return (1..d).fold(mutableListOf<Point>()){acc, n -> accum(acc,Point(x, y + n))}
+    }
+    if(op == 'L'){
+        return (1..d).fold(mutableListOf<Point>()){acc, n -> accum(acc,Point(x - n, y))}
+    }
+    return (1..d).fold(mutableListOf<Point>()){acc, n -> accum(acc,Point(x + n, y))}
 
 
 
