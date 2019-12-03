@@ -2,7 +2,6 @@ package aoc2019
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
 
 internal class Day2KtTest {
     @Test
@@ -13,7 +12,6 @@ internal class Day2KtTest {
         val p4 = mutableListOf<Int>(1,1,1,4,99,5,6,0,99)
         kotlin.test.assertTrue { runProg(p1) ==
                 listOf(2,0,0,0,99)}
-
         kotlin.test.assertTrue { runProg(p2) ==
                 listOf(2,3,0,6,99)}
         kotlin.test.assertTrue { runProg(p3) ==
