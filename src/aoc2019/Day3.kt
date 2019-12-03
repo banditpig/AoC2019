@@ -8,30 +8,25 @@ typealias Point = Pair<Int,Int>
 fun applyInstruction(instr:Pair<Char, Int>, point:Point ):List<Point> {
     val (op, d) = instr
     val (x, y) = point
+
     var points = mutableListOf<Point>()
     if(op == 'U') {
-        for (delta in 1..d) {
-            points.add(Point(x, y - delta))
-        }
+        (1..d).map{points.add(Point(x, y - it))}
+        return points
     }
     if(op == 'D') {
-        for (delta in 1..d) {
-            points.add(Point(x, y + delta))
-        }
-
+        (1..d).map{points.add(Point(x, y + it))}
+        return points
     }
     if(op == 'L'){
-        for (delta in 1..d  ) {
-            points.add(Point(x - delta, y))
-        }
+        (1..d).map{points.add(Point(x - it, y))}
+        return points
+    }
 
-    }
-    if(op == 'R'){
-        for (delta in 1..d)  {
-            points.add(Point(x + delta, y))
-        }
-    }
+    (1..d).map {points.add(Point(x + it, y)) }
     return points
+
+
 
 }
 fun parseInstruction(instr: String):Pair<Char,Int>{
@@ -43,10 +38,9 @@ fun allInstructions(wire:List<String>):List<Pair<Char,Int>>{
     return wire.map { parseInstruction(it) }
 }
 fun runInstructions(instr:List<Pair<Char,Int>> ):List<Point>{
-    
+
     var points = mutableListOf<Point>(Point(0,0))
     instr.map { points.addAll(applyInstruction(it, points.last())) }
-
     return points
 
 }
