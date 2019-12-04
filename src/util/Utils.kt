@@ -18,6 +18,9 @@ fun <U,V>  Sequence<U>.cartesian(other: Sequence<V>): Sequence<Pair<U,V>> =
 fun readFileLinesAsInt(fname: String): List<Int> =
     readFileLinesAsT(fname) { s -> s.toInt()}
 
+infix fun <P1, R, P2> ((P1) -> R).compose(f: (P2) -> P1): (P2) -> R {
+    return { p1: P2 -> this(f(p1)) }
+}
 fun <T> readFileLinesAsT(fname: String, convert: (String ) -> T): List<T> =
     readFileLines(fname).map { convert(it) }
 
