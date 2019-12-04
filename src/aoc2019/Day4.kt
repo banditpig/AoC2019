@@ -16,7 +16,6 @@ fun hasPairStrict(num:String): Boolean {
             fun prev(ix: Int) : Boolean {
                 if (ix == 0 ) return true
                 return  (num[ix] != num[ix - 1])
-
             }
        return (0..num.length - 2).fold(false) { ac, ix ->
             ac || ( num[ix] == num[ix + 1]) && (next(ix + 1) && prev(ix))
@@ -36,4 +35,3 @@ fun main() {
     count = (245182..790572).filter(){n -> check(n.toString(),::hasPairStrict)}.count()
     println(count)
 }
-
