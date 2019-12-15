@@ -2,7 +2,7 @@ package aoc2019
 
 import util.readFileLines
 
-data class Program(val prog: MutableList<Int>, val ix: Int, val input: Int, var output: Int)
+data class Program(val prog: MutableList<Int>, val ix: Int, val input: MutableList<Int>, var output: Int)
 
 sealed class Mode {
     object Immediate : Mode() {
@@ -85,7 +85,9 @@ fun evalOp(op: Operation, program: Program): Program {
         is Operation.Inp -> {
             val (m) = op
             val p = evalMode(m, prg, ix + 1);
-            prg[prg[ix + 1]] = program.input
+
+            val inp = program.input.removeAt(0)
+            prg[prg[ix + 1]] = inp
             return Program(prg, ix + 2, input, output)
         }
     }
@@ -174,12 +176,12 @@ fun main() {
     val ints = line.split(",").map { it.toInt() }
 
     println("Part 1")
-    var program = Program(ints.toMutableList(), 0, 1, 0)
+    var program = Program(ints.toMutableList(), 0, mutableListOf(1), 0)
     program = runProgram(program)
     println(program.output)
 
     println("Part 2")
-    program = Program(ints.toMutableList(), 0, 5, 0)
+    program = Program(ints.toMutableList(), 0, mutableListOf(5), 0)
     program = runProgram(program)
     println(program.output)
 }
