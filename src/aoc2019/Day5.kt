@@ -2,7 +2,24 @@ package aoc2019
 
 import util.readFileLines
 
-data class Program(val prog: MutableList<Int>, val ix: Int, val input: MutableList<Int>, var output: Int)
+
+data class Program(val prog: MutableList<Int>,
+                   val ix: Int,
+                   var input: MutableList<Int>,
+                   var output: Int,
+                   var state:State=State.READY,
+                   var name:String = ""){
+
+    enum class State {
+        READY,SUSPENDED,RUNNING,COMPLETED
+    }
+
+    override fun toString(): String {
+        return "Program(state=$state, name='$name' ix=$ix, input=$input, output=$output,         return \"Program(state=$state, name='$name' ix=$ix, input=$input, output=$output, prog=$prog)"
+    }
+}
+
+
 
 sealed class Mode {
     object Immediate : Mode() {
@@ -68,7 +85,8 @@ fun evalOp(op: Operation, program: Program): Program {
             val p1 = evalMode(m1, prg, ix + 1);
             val p2 = evalMode(m2, prg, ix + 2);
             prg[prg[ix + 3]] = p1 * p2
-            return Program(prg, ix + 4, input, output)
+
+            return Program(prg, ix + 4, input, output, program.state, program.name)
         }
     }
     when (op) {
@@ -77,7 +95,7 @@ fun evalOp(op: Operation, program: Program): Program {
             val p1 = evalMode(m1, prg, ix + 1);
             val p2 = evalMode(m2, prg, ix + 2);
             prg[prg[ix + 3]] = p1 + p2
-            return Program(prg, ix + 4, input, output)
+            return Program(prg, ix + 4, input, output, program.state, program.name)
 
         }
     }
@@ -85,10 +103,13 @@ fun evalOp(op: Operation, program: Program): Program {
         is Operation.Inp -> {
             val (m) = op
             val p = evalMode(m, prg, ix + 1);
-
+            // if program.input is empty - SUSPEND
+            if (program.input.isEmpty()){
+                return  Program(prg, ix, input, output,Program.State.SUSPENDED, program.name)
+            }
             val inp = program.input.removeAt(0)
             prg[prg[ix + 1]] = inp
-            return Program(prg, ix + 2, input, output)
+            return Program(prg, ix + 2, input, output, program.state, program.name)
         }
     }
     when (op) {
@@ -101,7 +122,7 @@ fun evalOp(op: Operation, program: Program): Program {
             } else {
                 prg[prg[ix + 1]]
             }
-            return Program(prg, ix + 2, input, opt)
+            return Program(prg, ix + 2, input, opt, program.state, program.name)
         }
     }
     when (op) {
@@ -109,8 +130,8 @@ fun evalOp(op: Operation, program: Program): Program {
             val (m1, m2) = op
             val p1 = evalMode(m1, prg, ix + 1);
             val p2 = evalMode(m2, prg, ix + 2);
-            return if (p1 != 0) Program(prg, p2, input, output)
-            else Program(prg, ix + 3, input, output)
+            return if (p1 != 0) Program(prg, p2, input, output, program.state, program.name)
+            else Program(prg, ix + 3, input, output, program.state, program.name)
         }
     }
     when (op) {
@@ -118,8 +139,8 @@ fun evalOp(op: Operation, program: Program): Program {
             val (m1, m2) = op
             val p1 = evalMode(m1, prg, ix + 1);
             val p2 = evalMode(m2, prg, ix + 2);
-            return if (p1 == 0) Program(prg, p2, input, output)
-            else Program(prg, ix + 3, input, output)
+            return if (p1 == 0) Program(prg, p2, input, output, program.state, program.name)
+            else Program(prg, ix + 3, input, output, program.state, program.name)
         }
     }
     when (op) {
@@ -132,7 +153,7 @@ fun evalOp(op: Operation, program: Program): Program {
             } else {
                 prg[prg[ix + 3]] = 0
             }
-            return Program(prg, ix + 4, input, output)
+            return Program(prg, ix + 4, input, output, program.state, program.name)
         }
     }
     when (op) {
@@ -145,7 +166,7 @@ fun evalOp(op: Operation, program: Program): Program {
             } else {
                 prg[prg[ix + 3]] = 0
             }
-            return Program(prg, ix + 4, input, output)
+            return Program(prg, ix + 4, input, output, program.state, program.name)
         }
     }
 
@@ -165,6 +186,10 @@ fun runProgram(program: Program): Program {
     val (prog, ix) = program
     val operation = parseOp(prog[ix])
     if (operation == Operation.End) {
+        program.state = Program.State.COMPLETED
+        return program
+    }
+    if (program.state == Program.State.SUSPENDED){
         return program
     }
 
